@@ -9,8 +9,11 @@ pd.set_option("display.max_columns", 30) # sets how many columns pandas will act
 # Note: by default pandas treats the text "None" as a missing value too,
 # but in the AirBags column "None" is a real category (no airbags), not missing data.
 # So we tell pandas to only treat "NA" (and blank cells) as missing, to avoid wrongly marking 32 valid "None" airbag entries as NaN.
-df = pd.read_csv("Cars93_missing.csv", keep_default_na=False, na_values=["NA", ""])
-print("1. Shape of the DataFrame:", df.shape)
+try:
+    df = pd.read_csv("Cars93_missing.csv", encoding="utf-8", keep_default_na=False, na_values=["NA", ""])
+except FileNotFoundError:
+    print("Error: Cars93_missing.csv not found in current directory")
+    exit()
 print(df.head())
 
 # 2. Transfer an object Series into the index column of the DataFrame
@@ -21,7 +24,7 @@ print(df.head())
 
 df.loc[df["Horsepower"] > 200, "Horsepower"] = df.loc[df["Horsepower"] > 200, "Horsepower"].apply(lambda x: (x // 10) * 10)
 
-# 4.Get names of the DataFrame columns and sum of losted values DF
+# 4.Get names of the DataFrame columns and sum of lost values DF
 
 print("4. Columns:", list(df.columns))
 print("\n   Missing values per column:")
